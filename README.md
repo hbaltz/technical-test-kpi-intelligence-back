@@ -17,9 +17,11 @@ This is the REST API to retrieve the investments data.
 
 ## Use the application 
 
-* To get all the investissement: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment"`
-* To apply a filter on the city or the progress status: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment?city=<THE_CITY>&progress_status=<THE_PROGRESS_STATUS>"`
+* Get all the investments: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment"`
+* Apply a filter on the city and/or the progress status: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment?city=<THE_CITY>&progress_status=<THE_PROGRESS_STATUS>"`
 Example: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment?city=Versailles&progress_status=Opération livrée"`
+* Get a single investment: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment/<CODEUAI>"`
+Example: `curl -i -H "Content-Type: application/json" "http://localhost:5000/api/investment/0782562L"`
 
 ## Stop the application
 
