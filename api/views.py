@@ -1,7 +1,7 @@
-import logging
 from flask import Flask, abort, json, request
-from . import app, error_handler
-from .utils import loader, response
+from sqlalchemy import and_
+from . import app, error_handler, models, db
+from .utils import loader, response, alchemy_json_encoder
 
 
 @app.route("/api/investment", methods=['GET'])
@@ -14,45 +14,35 @@ def get_data():
     city = request.args.get('city', None)
     progress_status = request.args.get('progress_status', None)
 
-    # We recover the investment data
-    try:
-        json_data = loader.getStaticData("data.json")
-    except FileNotFoundError as identifier:
-        logging.exception(identifier)
-        abort(500)
+    filters = []
 
-    # If a city was passed in argument, we applied the filter on 'ville'
-    if city:
-        json_data = [
-            json_data for json_data in json_data if json_data['ville'] == city]
+    # We recover the investment data depending on the filter
+    if city and progress_status:
+        investments = models.Investment.query.filter(and_(models.Investment.ville==city, models.Investment.etat_d_avancement==progress_status)).all()
+    elif city:
+        investments = models.Investment.query.filter(models.Investment.ville==city).all()
+    elif progress_status: 
+        investments = models.Investment.query.filter(models.Investment.etat_d_avancement==progress_status).all()
+    else: 
+        investments = models.Investment.query.all()
 
-    # If a porgess status was passed in argument, we applied the filter on 'etat_d_avancement'
-    if progress_status:
-        json_data = [
-            json_data for json_data in json_data if json_data['etat_d_avancement'] == progress_status]
-
-    result = response.json_response(json.dumps(json_data))
+    result = response.json_response(json.dumps(investments, cls=alchemy_json_encoder.AlchemyEncoder))
 
     return result
 
 
-@app.route("/api/investment/<string:investment_id>", methods=['GET'])
+@app.route("/api/investment/<int:investment_id>", methods=['GET'])
 def get_investment_by_id(investment_id):
     """ Recover a investment using his id
     :type investment_id: String
-    :param investment_id: The investment's codeuai
+    :param investment_id: The investment's id
 
     :raises:
 
     :rtype:
     """
-    try:
-        json_data = loader.getStaticData("data.json")
-    except FileNotFoundError as identifier:
-        logging.exception(identifier)
-        abort(500)
-    invest = [json_data for json_data in json_data if json_data['codeuai'] == investment_id]
-    if len(invest) == 0:
+    invest = models.Investment.query.get(investment_id)
+    if not invest:
         abort(404)
-    result = response.json_response(json.dumps({'investment': invest[0]}))
+    result = response.json_response(json.dumps(invest, cls=alchemy_json_encoder.AlchemyEncoder))
     return result

@@ -7,14 +7,17 @@ EXPOSE 5000
 
 LABEL maintainer="Hugo Baltz"
 
+
+RUN apk add --virtual build-deps gcc python-dev musl-dev && \
+    apk add --no-cache --update postgresql-dev
+
 # Indicate where uwsgi.ini lives
 ENV UWSGI_INI uwsgi.ini
-
-# Tell nginx where static files live.
-ENV STATIC_URL /api/static
 
 # Set the folder where uwsgi looks for the app
 WORKDIR /api
 
 # Copy the app contents to the image
 COPY . /api
+
+RUN pip install -r requirements.txt
