@@ -1,10 +1,11 @@
 from flask import Flask, abort, json, request
+from flask_cors import CORS, cross_origin
 from sqlalchemy import and_
 from . import app, error_handler, models, db
 from .utils import loader, response, alchemy_json_encoder
 
-
 @app.route("/api/investment", methods=['GET'])
+@cross_origin()
 def get_data():
     """ Get the investment data depending on the paramter passed to the request 
     :raises:
@@ -32,6 +33,7 @@ def get_data():
 
 
 @app.route("/api/investment/<int:investment_id>", methods=['GET'])
+@cross_origin()
 def get_investment_by_id(investment_id):
     """ Recover a investment using his id
     :type investment_id: String
