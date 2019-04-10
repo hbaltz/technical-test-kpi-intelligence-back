@@ -2,7 +2,7 @@ from flask import Flask, abort, json, request
 from flask_cors import CORS, cross_origin
 from sqlalchemy import and_
 from . import app, error_handler, models, db
-from .utils import loader, response, alchemy_json_encoder
+from .utils import response, alchemy_json_encoder
 
 @app.route("/api/investment", methods=['GET'])
 @cross_origin()
