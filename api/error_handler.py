@@ -1,4 +1,4 @@
-''' Override standard error management to return json instead of html'''
+''' Overrides standard error management to return json instead of html'''
 from flask import make_response, jsonify
 from . import app
 

@@ -15,8 +15,6 @@ def get_data():
     city = request.args.get('city', None)
     progress_status = request.args.get('progress_status', None)
 
-    filters = []
-
     # We recover the investment data depending on the filter
     if city and progress_status:
         investments = models.Investment.query.filter(and_(models.Investment.ville==city, models.Investment.etat_d_avancement==progress_status)).all()

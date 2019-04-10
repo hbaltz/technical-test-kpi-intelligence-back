@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import DeclarativeMeta
 import json, logging, datetime
 
+'''Uses to convert objects returned by Alchemy to json'''
 class AlchemyEncoder(json.JSONEncoder):
 
     def default(self, obj):

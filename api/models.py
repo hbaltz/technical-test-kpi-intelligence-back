@@ -1,6 +1,7 @@
 from . import db
 from datetime import datetime
 
+'''Represents an Investment'''
 class Investment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     codeuai = db.Column(db.String(8))
